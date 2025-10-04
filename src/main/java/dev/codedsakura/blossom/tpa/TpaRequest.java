@@ -60,21 +60,29 @@ class TpaRequest {
     }
 
     Object[] toArgs() {
-        return new Object[]{
-                BlossomTpa.CONFIG.timeout,
-                initiator,
-                receiver,
-                new CommandTextBuilder("/tpacancel")
-                        .setCommandRun("/tpacancel " + receiver.getGameProfile().getName())
-                        .setHoverShowRun(),
-                new CommandTextBuilder("/tpaaccept")
-                        .setCommandRun("/tpaaccept " + initiator.getGameProfile().getName())
-                        .setHoverShowRun(),
-                new CommandTextBuilder("/tpadeny")
-                        .setCommandRun("/tpadeny " + initiator.getGameProfile().getName())
-                        .setHoverShowRun(),
-        };
-    }
+    // Resolve safe player names: prefer GameProfile.name() (Optional) then fall back to the entity's username
+    String receiverName  = java.util.Optional.ofNullable(receiver.getGameProfile().name())
+        .orElse(receiver.getName().getString());
+	String initiatorName = java.util.Optional.ofNullable(initiator.getGameProfile().name())
+        .orElse(initiator.getName().getString());
+
+
+    return new Object[] {
+       BlossomTpa.CONFIG.timeout,
+       initiator,
+       receiver,
+    new CommandTextBuilder("/tpacancel")
+        .setCommandRun("/tpacancel " + receiverName)
+        .setHoverShowRun(),
+    new CommandTextBuilder("/tpaaccept")
+        .setCommandRun("/tpaaccept " + initiatorName)
+        .setHoverShowRun(),
+    new CommandTextBuilder("/tpadeny")
+        .setCommandRun("/tpadeny " + initiatorName)
+        .setHoverShowRun(),
+};
+
+}
 
     @Override
     public String toString() {

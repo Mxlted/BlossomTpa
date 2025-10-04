@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.10-SNAPSHOT'
+    id 'fabric-loom' version '1.11-SNAPSHOT'
     id 'maven-publish'
     id "com.modrinth.minotaur" version "2.+"
 }
@@ -10,16 +10,25 @@ group = project.maven_group
 
 repositories {
     mavenLocal()
+	mavenCentral()
+	maven { url "https://maven.fabricmc.net/" }
     maven { url "https://maven.nucleoid.xyz" }
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     maven { url "https://maven.codedsakura.dev/releases" }
 }
 
 dependencies {
+    // --- Minecraft + mappings
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings "net.fabricmc:yarn:${project.minecraft_version}+${project.yarn_mappings}:v2"
+    mappings  "net.fabricmc:yarn:${project.minecraft_version}+${project.yarn_mappings}:v2"
+
+    // --- Fabric API (monolithic, with +1.21.9 classifier)
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+    // --- ADD THIS: Fabric Loader (provides net.fabricmc.api.ModInitializer)
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
+    // --- Your lib
     modImplementation "dev.codedsakura.blossom:blossom-lib:${project.blossomlib_version}+${mc_version}"
 }
 
